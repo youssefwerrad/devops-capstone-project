@@ -13,9 +13,7 @@ from service.common import status  # HTTP Status Codes
 from service.models import db, Account, init_db
 from service.routes import app
 
-DATABASE_URI = os.getenv(
-    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
-)
+DATABASE_URI = os.getenv("DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres")
 
 BASE_URL = "/accounts"
 
@@ -89,11 +87,7 @@ class TestAccountService(TestCase):
     def test_create_account(self):
         """It should Create a new Account"""
         account = AccountFactory()
-        response = self.client.post(
-            BASE_URL,
-            json=account.serialize(),
-            content_type="application/json"
-        )
+        response = self.client.post(BASE_URL, json=account.serialize(), content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Make sure location header is set
@@ -116,11 +110,7 @@ class TestAccountService(TestCase):
     def test_unsupported_media_type(self):
         """It should not Create an Account when sending the wrong media type"""
         account = AccountFactory()
-        response = self.client.post(
-            BASE_URL,
-            json=account.serialize(),
-            content_type="test/html"
-        )
+        response = self.client.post(BASE_URL, json=account.serialize(), content_type="test/html")
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     # ADD YOUR TEST CASES HERE ...
@@ -128,9 +118,7 @@ class TestAccountService(TestCase):
         """It should Read a single Account"""
         account = self._create_accounts(1)[0]
         # make a call to self.client.post() to create the account
-        resp = self.client.get(
-            f"{BASE_URL}/{account.id}", content_type="application/json"
-        )
+        resp = self.client.get(f"{BASE_URL}/{account.id}", content_type="application/json")
         # assert that the resp.status_code is status.HTTP_200_OK
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         # get the data from resp.get_json()
@@ -144,7 +132,6 @@ class TestAccountService(TestCase):
         resp = self.client.get(f"{BASE_URL}/0")
         # assert that the resp.status_code is status.HTTP_404_NOT_FOUND
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-        
 
     def test_get_account_list(self):
         """It should Get a list of Accounts"""
@@ -168,7 +155,7 @@ class TestAccountService(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         updated_account = resp.get_json()
         self.assertEqual(updated_account["name"], "Something Known")
-    
+
     def test_delete_account(self):
         """It should Delete an Account"""
         account = self._create_accounts(1)[0]
